@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 filedir = os.path.dirname(os.path.realpath(__file__))
-full_df_path = filedir + '/full_dataset.geojson'
+
 
 def check_format(df, full_df):
     "Check that new dataframe `df` is compatible in format with the master `full_df`"
@@ -39,15 +39,21 @@ def add_to_dataset(df, full_df):
 
     return full_df
 
+full_df = gpd.read_file(filedir + '/plotting/gpd_plot.geojson')
 
-# load big dataset
-full_df = gpd.read_file(full_df_path)
-
-# load dataset to add
-df = pd.read_csv(filedir + '/data/un/un_migrants_SCMdataset.csv')
-
-full_df = add_to_dataset(df, full_df)
+for subdir in os.walk(filedir + '/data'):
+    dirpath, dirnames, filenames = subdir
+    print(filenames)
+    for filename in filenames:
+        if filename.endswith('_SCMdataset.csv'):
+            # load dataset to add
+            df = pd.read_csv(dirpath + '/' + filename)
+            # add dataset
+            full_df = add_to_dataset(df, full_df)
 
 # save
+full_df_path = filedir + '/full_dataset.geojson'
 full_df.to_file(full_df_path)
+
+
 

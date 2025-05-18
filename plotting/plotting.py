@@ -8,7 +8,7 @@ filedir = os.path.dirname(os.path.realpath(__file__))
 
 df_in = gpd.read_file(filedir + '/../full_dataset.geojson')
 
-df_plot = df_in[['Country', 'International migrants', 'Sex ratio (males to females)', 'geometry']]
+df_plot = df_in[['Country', 'International migrants in proportion to population', 'Sex ratio (males to females)', 'geometry']]
 
 fig, axes = plt.subplots(2, 1)
 cmaps = ['Reds', 'Greens']

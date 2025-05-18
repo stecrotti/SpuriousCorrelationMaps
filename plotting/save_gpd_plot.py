@@ -8,4 +8,4 @@ gpd_countries = gpd.read_file(url)
 gpd_countries.rename(columns={'NAME': 'Country'}, inplace=True)
 gpd_countries = gpd_countries[['Country', 'geometry']]
 
-gpd_countries.to_file(os.path.dirname(os.path.realpath(__file__)) + '/gpd_countries.geojson')
+gpd_countries.to_file(os.path.dirname(os.path.realpath(__file__)) + '/gpd_plot.geojson')
