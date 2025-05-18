@@ -23,10 +23,7 @@ def fill_with_nans(df, full_df):
     return df
 
 
-def add_to_dataset(df):
-    # load big dataset
-    full_df = gpd.read_file(full_df_path)
-
+def add_to_dataset(df, full_df):
     # check format
     check_format(df, full_df)
 
@@ -40,8 +37,17 @@ def add_to_dataset(df):
     # add to big dataset
     full_df = full_df.merge(df)
 
-    # save
-    full_df.to_file(full_df_path)
+    return full_df
 
+
+# load big dataset
+full_df = gpd.read_file(full_df_path)
+
+# load dataset to add
 df = pd.read_csv(filedir + '/data/un/un_migrants_SCMdataset.csv')
-add_to_dataset(df)
+
+full_df = add_to_dataset(df, full_df)
+
+# save
+full_df.to_file(full_df_path)
+

@@ -42,7 +42,7 @@ def get_feature_dataset(df_in, feature_name, newname = None, transform = None):
     countries_covered_by_year = (df.groupby('Year').nunique()['Country'])
     covered_years = countries_covered_by_year[countries_covered_by_year == ncountries]
     if covered_years.empty:
-        raise Exception(f"Feature not available for all countries for all years:\n{countries_covered_by_year}")
+        raise Exception(f"Feature `{feature_name}` not available for all {ncountries} countries for all years:\n{countries_covered_by_year}")
     year = int(covered_years.index[-1])
     df = df[df['Year'] == year]
     assert(len(df) == ncountries)
