@@ -1,0 +1,47 @@
+import pandas as pd
+import geopandas as gpd
+import numpy as np
+import os
+
+filedir = os.path.dirname(os.path.realpath(__file__))
+full_df_path = filedir + '/full_dataset.geojson'
+
+def check_format(df, full_df):
+    "Check that new dataframe `df` is compatible in format with the master `full_df`"
+
+    assert(df.columns.values[0] == 'Country') 
+
+    return None
+
+def fill_with_nans(df, full_df):
+    countries_to_be_added = full_df['Country'][~full_df['Country'].isin(df['Country'])].to_frame()
+    n = len(countries_to_be_added)
+    for colname in df.columns[1:]:
+        countries_to_be_added.insert(1, colname, np.nan * np.ones(n))
+    df = pd.concat([df, countries_to_be_added])
+    df.reset_index(drop=True, inplace=True)
+    return df
+
+
+def add_to_dataset(df):
+    # load big dataset
+    full_df = gpd.read_file(full_df_path)
+
+    # check format
+    check_format(df, full_df)
+
+    # keep only rows with country names existing in `df_full`
+    compatible_names = df['Country'].isin(full_df['Country'])
+    df = df[compatible_names]
+
+    # fill countries not in `df` with NaNs
+    df = fill_with_nans(df, full_df)
+
+    # add to big dataset
+    full_df = full_df.merge(df)
+
+    # save
+    full_df.to_file(full_df_path)
+
+df = pd.read_csv(filedir + '/data/un/un_migrants_SCMdataset.csv')
+add_to_dataset(df)
