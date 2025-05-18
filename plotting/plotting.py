@@ -9,7 +9,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 df_un = pd.read_csv(cwd + '/../data/un/un_clean.csv')
 
 df = df_un[['Country', 'Population (millions)', 'Sex ratio (males to females)']]
-df = df_un[['Country', 'Population aged 0 to 14 years old (percentage)', 'Sex ratio (males to females)']]
+df = df_un[['Country', 'Population aged 0 to 14 years old (proportion)', 'Population aged 60+ years old (proportion)']]
 
 assert(len(df.columns) == 3)
 
@@ -34,6 +34,8 @@ df_plot = gpd_countries.merge(df, on='Country')
 fig, axes = plt.subplots(2, 1)
 cmaps = ['Reds', 'Greens']
 
+cor = df_plot[df_plot.columns[2]].corr(df_plot[df_plot.columns[3]])
+
 for i in range(2):
     feature = df_plot.columns[i+2]
     df_plot.plot(
@@ -43,11 +45,11 @@ for i in range(2):
         cmap = cmaps[i],
         legend = True
     )
-    # fig.colorbar(axes[i].collections[0], ax = axes[i])
 
     axes[i].set_xticks([])
     axes[i].set_yticks([])
 
     axes[i].title.set_text(feature)
 
+fig.suptitle(f'R={cor}')
 plt.show()
