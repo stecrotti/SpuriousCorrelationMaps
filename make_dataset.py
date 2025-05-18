@@ -3,8 +3,6 @@ import geopandas as gpd
 import numpy as np
 import os
 
-filedir = os.path.dirname(os.path.realpath(__file__))
-
 
 def check_format(df, full_df):
     "Check that new dataframe `df` is compatible in format with the master `full_df`"
@@ -39,21 +37,25 @@ def add_to_dataset(df, full_df):
 
     return full_df
 
-full_df = gpd.read_file(filedir + '/plotting/gpd_plot.geojson')
+def make_and_save_dataset():
+    filedir = os.path.dirname(os.path.realpath(__file__))
 
-for subdir in os.walk(filedir + '/data'):
-    dirpath, dirnames, filenames = subdir
-    print(filenames)
-    for filename in filenames:
-        if filename.endswith('_SCMdataset.csv'):
-            # load dataset to add
-            df = pd.read_csv(dirpath + '/' + filename)
-            # add dataset
-            full_df = add_to_dataset(df, full_df)
+    # initialize dataset with geometry info to plot countries
+    full_df = gpd.read_file(filedir + '/plotting/gpd_plot.geojson')
 
-# save
-full_df_path = filedir + '/full_dataset.geojson'
-full_df.to_file(full_df_path)
+    # scan subfolders of `/data/` to look for datasets
+    for subdir in os.walk(filedir + '/data'):
+        dirpath, dirnames, filenames = subdir
+        for filename in filenames:
+            if filename.endswith('_SCMdataset.csv'):
+                # load dataset to add
+                df = pd.read_csv(dirpath + '/' + filename)
+                # add dataset
+                full_df = add_to_dataset(df, full_df)
+
+    # save
+    full_df_path = filedir + '/full_dataset.geojson'
+    full_df.to_file(full_df_path)
 
 
 

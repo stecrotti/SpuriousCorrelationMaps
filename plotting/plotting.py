@@ -4,31 +4,30 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-filedir = os.path.dirname(os.path.realpath(__file__))
+def plot_two_series(df, name1, name2):
+    df_plot = df[['Country', name1, name2, 'geometry']]
 
-df_in = gpd.read_file(filedir + '/../full_dataset.geojson')
+    fig, axes = plt.subplots(2, 1)
+    cmaps = ['Reds', 'Greens']
 
-df_plot = df_in[['Country', 'International migrants in proportion to population', 'Sex ratio (males to females)', 'geometry']]
+    cor = df_plot[df_plot.columns[1]].corr(df_plot[df_plot.columns[2]])
 
-fig, axes = plt.subplots(2, 1)
-cmaps = ['Reds', 'Greens']
+    for i in range(2):
+        feature = df_plot.columns[i+1]
+        df_plot.plot(
+            ax = axes[i],
+            column = df_plot[feature],
+            missing_kwds = {'color': 'lightgrey'},
+            cmap = cmaps[i],
+            legend = True
+        )
 
-cor = df_plot[df_plot.columns[1]].corr(df_plot[df_plot.columns[2]])
+        axes[i].set_xticks([])
+        axes[i].set_yticks([])
 
-for i in range(2):
-    feature = df_plot.columns[i+1]
-    df_plot.plot(
-        ax = axes[i],
-        column = df_plot[feature],
-        missing_kwds = {'color': 'lightgrey'},
-        cmap = cmaps[i],
-        legend = True
-    )
+        axes[i].title.set_text(feature)
 
-    axes[i].set_xticks([])
-    axes[i].set_yticks([])
+    fig.suptitle(f'R={cor}')
+    plt.show()
 
-    axes[i].title.set_text(feature)
-
-fig.suptitle(f'R={cor}')
-plt.show()
+    return fig
