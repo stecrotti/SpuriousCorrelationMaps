@@ -9,7 +9,7 @@ import random
 
 st.title('Spurious Correlation Maps')
 
-make_and_save_dataset()
+# make_and_save_dataset()
 
 if st.button("Generate random pair of maps", type="primary"):
     filedir = os.path.dirname(os.path.realpath(__file__))
