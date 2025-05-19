@@ -27,7 +27,7 @@ def plot_two_series(df, name1, name2):
 
         axes[i].title.set_text(feature)
 
-    fig.suptitle(f'R={cor}')
+    fig.suptitle(f'R={round(cor, 4)}')
     plt.show()
 
     return fig
