@@ -17,13 +17,15 @@ df_in.rename(columns={'Unnamed: 1': 'Country'}, inplace=True)
 
 df_in = correct_country_names(df_in)
 
+dfs_un = []
+
 df_migrants = get_feature_dataset(
     df_in, 
     'International migrant stock: Both sexes (number)',
     newname = 'Number of international migrants',
     transform = string_with_commas_to_int
     )
-df_un = df_migrants
+dfs_un.append(df_migrants)
 
 df_migrants_proportion = get_feature_dataset(
     df_in, 
@@ -31,7 +33,8 @@ df_migrants_proportion = get_feature_dataset(
     newname = 'International migrants in proportion to population',
     transform = percentage_str_to_prop_float
     )
-df_un = pd.merge(df_un, df_migrants_proportion)
+dfs_un.append(df_migrants_proportion)
+
 
 # df_refugees = get_feature_dataset(
 #     df_in, 
@@ -49,6 +52,7 @@ df_un = pd.merge(df_un, df_migrants_proportion)
 #     )
 # df_un = pd.merge(df_un, df_asylum)
 
+df_un = pd.concat(dfs_un, axis=1)
 df_un.to_csv(filedir + '/' + os.path.basename(__file__)[:-3] + '_SCMdataset.csv', index = False)
 
 os.remove(filedir + '/data.csv') 

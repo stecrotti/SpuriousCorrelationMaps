@@ -33,7 +33,7 @@ def add_to_dataset(df, full_df):
     df = fill_with_nans(df, full_df)
 
     # add to big dataset
-    full_df = full_df.merge(df)
+    full_df = full_df.merge(df, on=['Country'])
 
     return full_df
 

@@ -1,3 +1,5 @@
+import warnings
+
 # select only valid country names
 def correct_country_names(df):
     d = {
@@ -42,7 +44,8 @@ def get_feature_dataset(df_in, feature_name, newname = None, transform = None):
     countries_covered_by_year = (df.groupby('Year').nunique()['Country'])
     covered_years = countries_covered_by_year[countries_covered_by_year == ncountries]
     if covered_years.empty:
-        raise Exception(f"Feature `{feature_name}` not available for all {ncountries} countries for all years:\n{countries_covered_by_year}")
+        print(f'Warning: Feature `{feature_name}` not available for all {ncountries} countries for all years:\n{countries_covered_by_year}\n')
+        return None
     year = int(covered_years.index[-1])
     df = df[df['Year'] == year]
     assert(len(df) == ncountries)
@@ -61,4 +64,7 @@ def string_with_commas_to_int(s):
     return int(ss)
 
 def percentage_str_to_prop_float(s):
+    return float(s) / 100
+
+def perthousand_str_to_prop_float(s):
     return float(s) / 100
