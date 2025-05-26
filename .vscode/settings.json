@@ -1,6 +1,0 @@
-{
-    "python.defaultInterpreterPath": "home/stecrotti/miniforge3/envs/SCM/bin/python",
-    "pylint.interpreter": [
-        "/home/stecrotti/miniforge3/envs/SCM/bin/python"
-    ]
-}
