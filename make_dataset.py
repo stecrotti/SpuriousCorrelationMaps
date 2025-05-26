@@ -53,6 +53,9 @@ def make_and_save_dataset():
                 # add dataset
                 full_df = add_to_dataset(df, full_df)
 
+                print(filename)
+                print(df.columns.values, '\n')
+
     # save
     full_df_path = filedir + '/full_dataset.geojson'
     full_df.to_file(full_df_path)

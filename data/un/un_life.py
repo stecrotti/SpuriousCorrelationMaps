@@ -59,6 +59,8 @@ dfs_notnone = [df for df in dfs_un if df is not None]
 df_un = reduce(lambda  left,right: pd.merge(left,right,on=['Country'],
                                             how='outer'), dfs_un)
 
+print(df_un.columns)
+
 df_un.to_csv(filedir + '/' + os.path.basename(__file__)[:-3] + '_SCMdataset.csv', index = False)
 
 os.remove(filedir + '/data.csv') 

@@ -1,6 +1,7 @@
 import os
 import urllib.request
 import pandas as pd
+from functools import reduce
 
 from utils import *
 
@@ -19,41 +20,41 @@ df_in = correct_country_names(df_in)
 
 dfs_un = []
 
-df_pop = get_feature_dataset(
+df = get_feature_dataset(
     df_in, 
     'Population mid-year estimates (millions)',
     newname = 'Population (millions)',
     transform = string_with_commas_to_float
     )
-if df_pop is not None:
-    dfs_un.append(df_pop)
+if df is not None:
+    dfs_un.append(df)
 
-df_sex_ratio = get_feature_dataset(
+df = get_feature_dataset(
     df_in, 
     'Sex ratio (males per 100 females)',
     newname = 'Sex ratio (males to females)',
     transform = percentage_str_to_prop_float
     )
-if df_sex_ratio is not None:
-    dfs_un.append(df_sex_ratio)
+if df is not None:
+    dfs_un.append(df)
 
-df_pop_young = get_feature_dataset(
+df = get_feature_dataset(
     df_in, 
     'Population aged 0 to 14 years old (percentage)',
     newname = 'Population aged 0 to 14 years old (proportion)',
     transform = percentage_str_to_prop_float
     )
-if df_sex_ratio is not None:
-    dfs_un.append(df_sex_ratio)
+if df is not None:
+    dfs_un.append(df)
 
-df_pop_old = get_feature_dataset(
+df = get_feature_dataset(
     df_in, 
     'Population aged 60+ years old (percentage)',
     newname = 'Population aged 60+ years old (proportion)',
     transform = percentage_str_to_prop_float
     )
-if df_pop_old is not None:
-    dfs_un.append(df_pop_old)
+if df is not None:
+    dfs_un.append(df)
 
 df_pop_density = get_feature_dataset(
     df_in, 
@@ -61,10 +62,12 @@ df_pop_density = get_feature_dataset(
     newname = 'Population density (per km2)',
     transform = string_with_commas_to_float
     )
-if df_pop_density is not None:
-    dfs_un.append(df_pop_density)
+if df is not None:
+    dfs_un.append(df)
 
-df_un = pd.concat(dfs_un, axis=1)
+df_un = reduce(lambda  left,right: pd.merge(left,right,on=['Country'],
+                                            how='inner'), dfs_un)
+
 df_un.to_csv(filedir + '/' + os.path.basename(__file__)[:-3] + '_SCMdataset.csv', index = False)
 
 os.remove(filedir + '/data.csv') 
