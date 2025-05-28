@@ -42,10 +42,14 @@ def prepare_un_dataset(filedir, url):
     df_in = pd.read_csv(filedir + '/tmp_data.csv', skiprows = [0], encoding = 'latin-1')
     df_in.rename(columns={'Unnamed: 1': 'Country'}, inplace=True)
     df_in = correct_country_names(df_in)
-    first_valid_row = df_in[df_in['Country'] == 'Afghanistan'].iloc[0]
-    df_in = df_in.drop(index=range(first_valid_row.name))
-
-    return df_in
+    starts_with_afghanistan = df_in[df_in['Country'] == 'Afghanistan']
+    if starts_with_afghanistan.empty:
+        raise(Exception('DataFrame does not contain entry for the first country in alphabetical order: Afghanistan'))
+    else:
+        first_valid_row = starts_with_afghanistan.iloc[0]
+        df_in = df_in.drop(index=range(first_valid_row.name))
+        return df_in
+    
 
 def dataset_from_names_and_transforms(df_in, names_transforms):
     dfs = []
@@ -80,7 +84,7 @@ def make_feature_dataset(df_in, feature_name, newname = None, transform = None):
     countries_covered_by_year = (df.groupby('Year').nunique()['Country'])
     covered_years = countries_covered_by_year[countries_covered_by_year == ncountries]
     if covered_years.empty:
-        print(f'Warning: Feature `{feature_name}` not available for all {ncountries} countries for all years:\n{countries_covered_by_year}\n')
+        # print(f'Warning: Feature `{feature_name}` not available for all {ncountries} countries for all years:\n{countries_covered_by_year}\n')
         return None
     year = int(covered_years.index[-1])
     df = df[df['Year'] == year]
@@ -103,4 +107,7 @@ def percentage_str_to_prop_float(s):
     return float(s) / 100
 
 def perthousand_str_to_prop_float(s):
-    return float(s) / 100
+    return float(s) / 1000
+
+def str_mult_times_thousand(s):
+    return float(s) * 1000
