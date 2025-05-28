@@ -1,4 +1,5 @@
-import warnings
+import urllib.request
+import pandas as pd
 
 # select only valid country names
 def correct_country_names(df):
@@ -33,7 +34,42 @@ def correct_country_names(df):
     }
     return df.replace(d)
 
-def get_feature_dataset(df_in, feature_name, newname = None, transform = None):
+def prepare_un_dataset(filedir, url):
+    # download dataset
+    urllib.request.urlretrieve(url, filedir + '/tmp_data.csv')
+
+    # read starting from relevant row and set column name to Country
+    df_in = pd.read_csv(filedir + '/tmp_data.csv', skiprows = [0], encoding = 'latin-1')
+    df_in.rename(columns={'Unnamed: 1': 'Country'}, inplace=True)
+    df_in = correct_country_names(df_in)
+    first_valid_row = df_in[df_in['Country'] == 'Afghanistan'].iloc[0]
+    df_in = df_in.drop(index=range(first_valid_row.name))
+
+    return df_in
+
+def dataset_from_names_and_transforms(df_in, names_transforms):
+    dfs = []
+    # iterate over feature names to find matches
+    for _, row in names_transforms.iterrows():
+        if row['name'] in df_in['Series'].values:
+            # append data to dfs
+            df = make_feature_dataset(
+                df_in, 
+                row['name'], newname = row['newname'], transform = row['transform']
+            )
+            dfs.append(df)
+
+    return dfs
+
+def make_names_transforms_df(names_transforms_array):
+    # fill dataframe with names and transforms
+    names_transforms = pd.DataFrame(columns=['name', 'newname', 'transform'])
+    for nt in names_transforms_array:
+        names_transforms.loc[len(names_transforms)] = nt
+
+    return names_transforms
+
+def make_feature_dataset(df_in, feature_name, newname = None, transform = None):
     if newname is None:
         newname = feature_name
     if transform is None:

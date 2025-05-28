@@ -47,14 +47,11 @@ def make_and_save_dataset():
     for subdir in os.walk(filedir + '/data'):
         dirpath, dirnames, filenames = subdir
         for filename in filenames:
-            if filename.endswith('_SCMdataset.csv'):
+            if filename.endswith('SCMdataset.csv'):
                 # load dataset to add
                 df = pd.read_csv(dirpath + '/' + filename)
                 # add dataset
                 full_df = add_to_dataset(df, full_df)
-
-                print(filename)
-                print(df.columns.values, '\n')
 
     # save
     full_df_path = filedir + '/full_dataset.geojson'
