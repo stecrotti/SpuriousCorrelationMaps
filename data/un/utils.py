@@ -39,7 +39,10 @@ def prepare_un_dataset(filedir, url):
     urllib.request.urlretrieve(url, filedir + '/tmp_data.csv')
 
     # read starting from relevant row and set column name to Country
-    df_in = pd.read_csv(filedir + '/tmp_data.csv', skiprows = [0], encoding = 'latin-1')
+    try:
+        df_in = pd.read_csv(filedir + '/tmp_data.csv', skiprows = [0], encoding = 'utf8')
+    except:
+        df_in = pd.read_csv(filedir + '/tmp_data.csv', skiprows = [0], encoding = 'latin-1')
     df_in.rename(columns={'Unnamed: 1': 'Country'}, inplace=True)
     df_in = correct_country_names(df_in)
     starts_with_afghanistan = df_in[df_in['Country'] == 'Afghanistan']
