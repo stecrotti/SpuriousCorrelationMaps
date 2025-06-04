@@ -14,5 +14,3 @@ valid_features = df.columns[~df.columns.isin(['Country', 'geometry'])].to_list()
 name1, name2 = random.sample(valid_features, 2)
 
 plotting.plot_two_series(df, name1, name2)
-
-

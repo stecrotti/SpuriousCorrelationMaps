@@ -7,7 +7,8 @@ import os
 def check_format(df, full_df):
     "Check that new dataframe `df` is compatible in format with the master `full_df`"
 
-    assert(df.columns.values[0] == 'Country') 
+    if df.columns.values[0] != 'Country':
+        raise(Exception(f"DataFrame should have 'Country' has first column, got {df.columns.values[0]}"))
 
     return None
 

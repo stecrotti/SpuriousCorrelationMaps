@@ -2,6 +2,11 @@ import os
 import urllib.request
 import pandas as pd
 
+from un_utils import *
+
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).absolute().parent.parent))
 from utils import *
 
 filedir = os.path.dirname(os.path.realpath(__file__))
@@ -23,7 +28,7 @@ first_valid_row = df[df['Country'] == 'Afghanistan'].iloc[0]
 x = df.drop(index=range(first_valid_row.name))
 print(f'Lines to skip: {first_valid_row.name}\n')
 
-dfs = [get_feature_dataset(x, feat) for feat in features]
+dfs = [make_feature_dataset(x, feat) for feat in features]
 for df in dfs:
     if df is not None:
         print(df.columns.values[1])
