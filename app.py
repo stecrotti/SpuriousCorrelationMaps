@@ -34,3 +34,11 @@ if st.button("Generate random pair of maps", type="primary"):
     with col2:
         st.pyplot(fig)
 
+
+st.markdown('''
+            
+            Click the button to plot a random pair of country-based data series, along with the corresponding [Pearson correlation coefficient](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) R. 
+
+            Visit the [source page](https://github.com/stecrotti/SpuriousCorrelationMaps) for more info.
+            ''')
+

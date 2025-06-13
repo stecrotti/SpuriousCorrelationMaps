@@ -14,3 +14,7 @@ My idea is to do something similar but with country-based data, which can be vis
 Preview:
 
 <img src="preview.png" width=60% height=60%>
+
+## Data sources
+- https://data.un.org/
+- https://www.kaggle.com/datasets/nelgiriyewithana/billionaires-statistics-dataset

@@ -26,6 +26,7 @@ def plot_two_series(df, name1, name2):
         axes[i].set_yticks([])
 
         axes[i].title.set_text(feature)
+        axes[i].title.set_fontsize(9)
 
     fig.suptitle(f'R={round(cor, 4)}')
     plt.show()
